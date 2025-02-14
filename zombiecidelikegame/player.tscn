@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://fhedn153ul44"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_i3pxy"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_dy4xu"]
+radius = 0.1
+height = 0.5
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_e0kfa"]
+points = PackedVector3Array(0.0953145, 0.170053, 0.0213707, -0.0965806, -0.169485, -0.0155142, -0.0886563, -0.175763, -0.0373922, -0.0819945, 0.191962, -0.0376929, -0.0300403, 0.160925, 0.0942999, 0.0583526, -0.184862, 0.0731439, 0.0429849, -0.167872, -0.0883693, 0.0139503, 0.169754, -0.0967327, -0.0737608, -0.16785, 0.064875, 0.0942999, -0.160925, -0.0300403, 0.0144295, -0.243881, -0.0312594, -0.044584, -0.160598, -0.0883929, -0.0955743, 0.153132, 0.0283568, 0.0144557, 0.244301, 0.0297245, 0.0722242, 0.167967, -0.0665078, 0.0496966, 0.158707, 0.0857742, -0.000793643, -0.178017, 0.0956131, -0.0584425, 0.158551, -0.0800677, -0.03093, -0.233687, 0.0444204, 0.0934183, -0.144947, 0.0354304, 0.0293078, 0.233417, -0.0459554, -0.0610478, 0.22599, 0.0217897, 0.059734, -0.227015, 0.0218922, -0.0235393, 0.23522, -0.0463042, -0.0953856, 0.145532, -0.029886, -0.0383032, -0.225137, -0.0533147, -0.0737611, 0.167851, 0.0648752, 0.0950523, 0.169589, -0.0228975, -0.0155137, -0.169479, -0.0965772, -0.0511934, -0.151249, 0.0856191, 0.0795333, 0.167978, 0.0576209, -0.0306837, 0.20934, 0.0739601)
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_i3pxy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_dy4xu")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("ConvexPolygonShape3D_e0kfa")
+
+[node name="HorizontalPivot" type="Node3D" parent="."]
+
+[node name="VerticalPivot" type="Node3D" parent="HorizontalPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="HorizontalPivot/VerticalPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.79255)

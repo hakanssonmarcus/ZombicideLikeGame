@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://qeesj3rcso0n"]
+
+[ext_resource type="Script" path="res://ui.gd" id="1_1fvfn"]
+[ext_resource type="Texture2D" uid="uid://ckdd35p1uyqhb" path="res://art/action_bar_art/move_arrows.jpg" id="2_iyrcw"]
+
+[node name="ui" type="CanvasLayer"]
+script = ExtResource("1_1fvfn")
+
+[node name="action_bar_screen" type="Node2D" parent="."]
+
+[node name="MoveButton" type="Button" parent="action_bar_screen"]
+self_modulate = Color(1, 1, 1, 0)
+offset_left = 558.0
+offset_top = 540.0
+offset_right = 627.0
+offset_bottom = 607.0
+
+[node name="Sprite2D" type="Sprite2D" parent="action_bar_screen/MoveButton"]
+position = Vector2(34.5, 33)
+scale = Vector2(0.237589, 0.237589)
+texture = ExtResource("2_iyrcw")
+
+[connection signal="pressed" from="action_bar_screen/MoveButton" to="." method="_on_move_button_pressed"]
