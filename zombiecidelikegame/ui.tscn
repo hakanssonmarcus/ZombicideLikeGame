@@ -8,7 +8,7 @@ script = ExtResource("1_1fvfn")
 
 [node name="action_bar_screen" type="Node2D" parent="."]
 
-[node name="MoveButton" type="Button" parent="action_bar_screen"]
+[node name="MoveButton" type="Button" parent="action_bar_screen" groups=["Global"]]
 self_modulate = Color(1, 1, 1, 0)
 offset_left = 558.0
 offset_top = 540.0

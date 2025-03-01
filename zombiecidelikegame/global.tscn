@@ -1,9 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://d3xvlu505ws1p"]
+[gd_scene load_steps=8 format=3 uid="uid://d3xvlu505ws1p"]
 
 [ext_resource type="MeshLibrary" uid="uid://hvrcq421jy4q" path="res://mesh_libary/zonesMeshes.tres" id="1_i3mas"]
 [ext_resource type="Script" path="res://global.gd" id="1_jt8np"]
 [ext_resource type="Script" path="res://grid_map.gd" id="2_1juo0"]
-[ext_resource type="PackedScene" uid="uid://qeesj3rcso0n" path="res://ui.tscn" id="5_1403v"]
 [ext_resource type="Script" path="res://game_manager.gd" id="7_8olnv"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_disby"]
@@ -19,7 +18,7 @@ sky = SubResource("Sky_142q2")
 tonemap_mode = 2
 glow_enabled = true
 
-[node name="Global" type="Node3D"]
+[node name="Global" type="Node3D" groups=["Global"]]
 script = ExtResource("1_jt8np")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -38,7 +37,5 @@ data = {
 script = ExtResource("2_1juo0")
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
-[node name="GameManager" type="Node3D" parent="."]
+[node name="GameManager" type="Node3D" parent="." groups=["Global"]]
 script = ExtResource("7_8olnv")
-
-[node name="ui" parent="." instance=ExtResource("5_1403v")]

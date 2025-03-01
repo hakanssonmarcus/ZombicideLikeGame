@@ -20,6 +20,7 @@ var isActionBarVisible := false
 var isPossibleMovesVisible := false
 
 func set_game_state(state: String) -> void:
+	print("Set game state to: ", state)
 	GAME_STATE = state
 	
 func toggleActionBarHandler() -> void:
