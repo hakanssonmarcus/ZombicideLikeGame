@@ -28,7 +28,7 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_fnbce")
 
-[node name="GridMap" type="GridMap" parent="."]
+[node name="GridMap" type="GridMap" parent="." groups=["GridMap"]]
 mesh_library = ExtResource("1_i3mas")
 cell_center_y = false
 data = {
