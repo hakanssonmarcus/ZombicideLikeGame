@@ -11,12 +11,12 @@ script = ExtResource("1_1fvfn")
 [node name="MoveButton" type="Button" parent="action_bar_screen" groups=["Global"]]
 self_modulate = Color(1, 1, 1, 0)
 offset_left = 558.0
-offset_top = 540.0
+offset_top = 551.0
 offset_right = 627.0
-offset_bottom = 607.0
+offset_bottom = 618.0
 
 [node name="Sprite2D" type="Sprite2D" parent="action_bar_screen/MoveButton"]
-position = Vector2(34.5, 33)
+position = Vector2(35, 34)
 scale = Vector2(0.237589, 0.237589)
 texture = ExtResource("2_iyrcw")
 

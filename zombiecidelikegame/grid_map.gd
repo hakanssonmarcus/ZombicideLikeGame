@@ -3,64 +3,41 @@ extends GridMap
 const player_scene = preload("res://player.tscn")
 const zombie_scene = preload("res://zombie.tscn")
 
-const GRID_OFFSET = Vector3i(1,0,1)
+var PLAYER_START_POSTION := map_to_local(Vector3i(0,0,4))
+var ZOMBIE_START_POSTION := map_to_local(Vector3i(1,0,0))
 
-var PLAYER_START_POSTION := setGamePositionToGridMapPosition(Vector3i(1,1,5))
-var ZOMBIE_START_POSTION := setGamePositionToGridMapPosition(Vector3i(2,1,1))
+var PLAYER_CURRENT_POSITION := PLAYER_START_POSTION
 
-var PLAYER_CURRENT_GRIDMAP_POSITION := PLAYER_START_POSTION
-
-var PLAYER_CURRENT_GAME_POSITION := getGamePositionByGridMapPosition(PLAYER_CURRENT_GRIDMAP_POSITION)
-
-func setGamePositionToGridMapPosition(gamePosition: Vector3i) -> Vector3i:
-	gamePosition.x = gamePosition.x * 2 - GRID_OFFSET.x
-	gamePosition.z = gamePosition.z * 2 - GRID_OFFSET.z
-	return gamePosition
-	
-func getGamePositionByGridMapPosition(gamePosition: Vector3i) -> Vector3i:
-	gamePosition.x = (gamePosition.x + GRID_OFFSET.x) / 2
-	gamePosition.y = 0
-	gamePosition.z = (gamePosition.z + GRID_OFFSET.z) / 2
-	return gamePosition
-
-func update_player_position(gamePosition: Vector3i) -> void:
-	PLAYER_CURRENT_GRIDMAP_POSITION = setGamePositionToGridMapPosition(gamePosition)
+#TODO: Move func to Player scene
+func update_player_position(position: Vector3i) -> void:
+	var localPos = map_to_local(position)
+	PLAYER_CURRENT_POSITION = localPos
+	var playerInstance = get_child(0)
+	playerInstance.position = Vector3(localPos.x, localPos.y + 1, localPos.z)
 
 func highlight_tiles() -> void:
-	print("players current game position: ", PLAYER_CURRENT_GAME_POSITION)
-	var cells = get_used_cells()
-	var leftZoneOfPlayerPosition = PLAYER_CURRENT_GAME_POSITION - Vector3i(1,0,0)
-	var rightZoneOfPlayerPosition = PLAYER_CURRENT_GAME_POSITION + Vector3i(1,0,0)
-	var norhtZoneOfPlayerPosition = PLAYER_CURRENT_GAME_POSITION - Vector3i(0,0,1)
-	var southZoneOfPlayerPosition = PLAYER_CURRENT_GAME_POSITION + Vector3i(0,0,1)
-	
-	var lefZoneCellOfPlayerPosition = leftZoneOfPlayerPosition - GRID_OFFSET
-	var rightZoneCellOfPlayerPosition = rightZoneOfPlayerPosition - GRID_OFFSET
-	var norhtZoneCellOfPlayerPosition = norhtZoneOfPlayerPosition - GRID_OFFSET
-	var southZoneCellOfPlayerPosition = southZoneOfPlayerPosition - GRID_OFFSET
-	
-	#print("leftZoneOfPlayerPosition: ", leftZoneOfPlayerPosition)
-	print("rightZoneOfPlayerPosition: ", rightZoneOfPlayerPosition)
-	print("gridmap right cell: ", setGamePositionToGridMapPosition(rightZoneOfPlayerPosition))
-	#print("norhtZoneOfPlayerPosition: ", norhtZoneOfPlayerPosition)
-	#print("southZoneOfPlayerPosition: ", southZoneOfPlayerPosition)
+	var leftZoneOfPlayerPosition = local_to_map(PLAYER_CURRENT_POSITION) - Vector3i(1,0,0)
+	var rightZoneOfPlayerPosition = local_to_map(PLAYER_CURRENT_POSITION) + Vector3i(1,0,0)
+	var norhtZoneOfPlayerPosition = local_to_map(PLAYER_CURRENT_POSITION) - Vector3i(0,0,1)
+	var southZoneOfPlayerPosition = local_to_map(PLAYER_CURRENT_POSITION) + Vector3i(0,0,1)
 
-	var leftCellItem = get_cell_item(lefZoneCellOfPlayerPosition)
-	var rightCellItem = get_cell_item(rightZoneCellOfPlayerPosition)
-	var northCellItem = get_cell_item(norhtZoneCellOfPlayerPosition)
-	var southCellItem = get_cell_item(southZoneCellOfPlayerPosition)
+	var leftCellItem = get_cell_item(leftZoneOfPlayerPosition)
+	var rightCellItem = get_cell_item(rightZoneOfPlayerPosition)
+	var northCellItem = get_cell_item(norhtZoneOfPlayerPosition)
+	var southCellItem = get_cell_item(southZoneOfPlayerPosition)
 	
+	#TODO: Add more complex check if zone should be highlighted
 	if leftCellItem == 0:
-		set_cell_item(lefZoneCellOfPlayerPosition, 2, 0)
+		set_cell_item(leftZoneOfPlayerPosition, 2, 0)
 	
 	if rightCellItem == 0:
-		set_cell_item(rightZoneCellOfPlayerPosition, 2, 0)
+		set_cell_item(rightZoneOfPlayerPosition, 2, 0)
 	
 	if northCellItem == 0:
-		set_cell_item(norhtZoneCellOfPlayerPosition, 2, 0)
+		set_cell_item(norhtZoneOfPlayerPosition, 2, 0)
 	
 	if southCellItem == 0:
-		set_cell_item(southZoneCellOfPlayerPosition, 2, 0)
+		set_cell_item(southZoneOfPlayerPosition, 2, 0)
 		
 
 func remove_highlight_tiles() -> void:
@@ -69,18 +46,45 @@ func remove_highlight_tiles() -> void:
 		print(cell)
 		set_cell_item(cell, 0)
 
+func get_mouse_hit_pos():
+	const RAY_LENGTH = 1000
+	var space_state = get_world_3d().direct_space_state
+	var cam: Camera3D = get_viewport().get_camera_3d()
+	var mousepos = get_viewport().get_mouse_position()
+
+	var origin = cam.project_ray_origin(mousepos)
+	var end = origin + cam.project_ray_normal(mousepos) * RAY_LENGTH
+	var query = PhysicsRayQueryParameters3D.create(origin, end)
+	query.collide_with_areas = true
+
+	var result = space_state.intersect_ray(query)
+	
+	if result:
+		return result.position
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var playerInstance = player_scene.instantiate()
 	var zombieInstance = zombie_scene.instantiate()
 	
-	playerInstance.position = PLAYER_START_POSTION
-	zombieInstance.position = ZOMBIE_START_POSTION
+	playerInstance.position = Vector3(PLAYER_START_POSTION.x, PLAYER_START_POSTION.y + 1, PLAYER_START_POSTION.z)
+	zombieInstance.position = Vector3(ZOMBIE_START_POSTION.x, ZOMBIE_START_POSTION.y + 1, ZOMBIE_START_POSTION.z)
 	
 	add_child(playerInstance)
 	add_child(zombieInstance)
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed == true:
+			var elementPosHitByMouse = get_mouse_hit_pos()
+			if elementPosHitByMouse:
+				var clickedElem = get_cell_item(local_to_map(elementPosHitByMouse))
+				if clickedElem == 2:
+					update_player_position(local_to_map(elementPosHitByMouse))
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	pass
+
+func _physics_process(delta):
 	pass
